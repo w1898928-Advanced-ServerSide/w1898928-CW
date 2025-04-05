@@ -1,12 +1,13 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require('path');
 
-const db = new sqlite3.Database(__dirname,"../../database.db",sqlite3.OPEN_READWRITE, (err)=>{
-    if(err) return console.error(err.message);
-
-    console.log("Connection Successful");
+const db = new sqlite3.Database(path.resolve(__dirname, "../../database.db"), (err) => {
+  if (err) {
+    console.error(" database connection failed:", err.message);
+  } else {
+    console.log("connected to the database.");
+  }
 });
-
 
 db.serialize(() => {
 
