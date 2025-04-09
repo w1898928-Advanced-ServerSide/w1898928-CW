@@ -29,7 +29,12 @@ class ApiKeyDAO {
             const sql = `SELECT * FROM api_keys WHERE apiId = ?`;
             db.get(sql, [apiId], (err, row) => {
                 if (err) return reject(err);
+                if (!row) {
+                // If no API key found, return a message
+                resolve(createResponse(false, null, 'API key not found'));
+            } else {
                 resolve(createResponse(true, row));
+            }
             });
         });
     }
@@ -65,7 +70,15 @@ class ApiKeyDAO {
                          WHERE apiId = ?`;
             db.run(sql, [expiresAt, isActive, attempts, apiId], function(err) {
                 if (err) return reject(err);
-                resolve(createResponse(true, null, 'API Key updated'));
+                 const responseBody = {
+                apiId,
+                expiresAt,
+                isActive,
+                attempts,
+                updatedAt: new Date().toISOString()
+            };
+            
+            resolve(createResponse(true, responseBody, 'API Key updated'));
             });
         });
     }
