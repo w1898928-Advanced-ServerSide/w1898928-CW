@@ -6,10 +6,10 @@ class UserService {
         this.userDao = new UserDAO();
     }
 
-    async registerUser(username, password) {
+    async registerUser(username, password, email) {
         try {
             const hashedPassword = await generateHash(password);
-            return await this.userDao.createUser(username, hashedPassword);
+            return await this.userDao.createUser(username, hashedPassword,email);
         } catch (error) {
             throw error;
         }

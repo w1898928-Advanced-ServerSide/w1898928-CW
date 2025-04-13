@@ -8,8 +8,8 @@ const userService = new UserService();
 // Register user
 router.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
-        await userService.registerUser(username, password);
+        const { username, password, email} = req.body;
+        await userService.registerUser(username, password, email);
         res.status(201).json({ success: true, message: 'User registered successfully' });
     } catch (error) {
         res.status(400).json({ success: false, error: error.message });
