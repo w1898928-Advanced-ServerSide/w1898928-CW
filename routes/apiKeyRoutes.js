@@ -26,6 +26,18 @@ router.post('/', async (req, res) => {
     }
 });
 
+// router.get('/header', async (req, res) => {
+//     try{
+//         const key = req.header('Authorization');
+//         console.log(key);
+//         res.status(200).json(key);
+
+//     }catch(error){
+//         res.status(500).json('Not Found');
+
+//     }
+// });
+
 // Get all API keys for current user
 router.get('/', async (req, res) => {
     try {
