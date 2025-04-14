@@ -12,11 +12,6 @@ const apiKeyMiddleware = async (req, res, next) => {
             return res.status(401).json(createResponse(false, null, 'API key is required'));
         }
 
-        // Validate API key format
-        if (!/^[a-f0-9]{64}$/.test(apiKey)) {
-            return res.status(400).json(createResponse(false, null, 'Invalid API key format'));
-        }
-
         // Check API key in database
         const keyResult = await apiKeyService.getApiKeyByKey(apiKey);
         

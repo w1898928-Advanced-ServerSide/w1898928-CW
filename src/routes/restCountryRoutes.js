@@ -1,20 +1,20 @@
-// routes/countryRoutes.js
 const express = require('express');
 const router = express.Router();
 const countryService = require('../services/restCountryServices');
 const apiKeyMiddleware = require('../middleware/authMiddleware');
+const CustomError = require('../utils/customError');
 
 // GET country by name
-router.get('/:name', apiKeyMiddleware, async (req, res) => {
+router.get('/:name', apiKeyMiddleware, async (req, res, next) => {
     try {
         const { name } = req.params;
         const result = await countryService.getCountryByName(name);
-        
-        if (!result.success) {
-            return res.status(404).json(result);
+
+        if (!result.success || !result.data || result.data.length === 0) {
+            throw new CustomError('Country not found', 404);
         }
 
-        // Transform the data to include only requested fields
+        // Filter the response
         const filteredData = result.data.map(country => ({
             name: {
                 common: country.name.common,
@@ -23,7 +23,7 @@ router.get('/:name', apiKeyMiddleware, async (req, res) => {
             capital: country.capital,
             languages: country.languages,
             flag: country.flag,
-            flags: country.flags // Include both emoji flag and image URLs
+            flags: country.flags // emoji and image URL
         }));
 
         res.status(200).json({
@@ -32,16 +32,9 @@ router.get('/:name', apiKeyMiddleware, async (req, res) => {
             message: 'Country data retrieved successfully'
         });
 
-    } catch (error) {
-        console.error('Route error:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Internal server error',
-            message: 'An unexpected error occurred'
-        });
+    } catch (err) {
+        next(new CustomError('Failed to fetch country data', 500, err));
     }
 });
-
-
 
 module.exports = router;

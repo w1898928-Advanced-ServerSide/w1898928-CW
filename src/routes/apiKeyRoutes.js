@@ -1,110 +1,99 @@
 const express = require('express');
 const router = express.Router();
 const ApiKeyService = require('../services/apiKeyServices');
-// const authMiddleware = require('../middleware/authMiddleware');
+const checkSession = require('../middleware/sessionAuth');
+const CustomError = require('../utils/customError');
 
 const apiKeyService = new ApiKeyService();
 
 // Generate new API key
-router.post('/', async (req, res) => {
+router.post('/', checkSession, async (req, res, next) => {
     try {
         const { userId, expiresInDays } = req.body;
-        // const userId = req.user.id; // Get userId from authenticated user
-        
-        // Generate API key with default 30-day expiration if not specified
-        const result = await apiKeyService.generateApiKey(
-            userId, 
-            expiresInDays || 30
-        );
-        
+        const result = await apiKeyService.generateApiKey(userId, expiresInDays || 30);
         res.status(201).json(result);
-    } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to generate API key', 500, err));
     }
 });
 
-//GET all API key
-router.get('/', async (req, res) => {
+// Get all API keys for a user
+router.get('/', checkSession, async (req, res, next) => {
     try {
-        const {userId} = req.query;
-        console.log('userId:', userId); 
+        const { userId } = req.query;
         const result = await apiKeyService.getUserApiKeys(userId);
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to fetch API keys', 500, err));
     }
 });
 
-//GET specific API key
-router.get('/:apiId', async (req, res) => {
+// Get specific API key by ID
+router.get('/:apiId', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
         const result = await apiKeyService.getApiKeyById(apiId);
-        
+
         if (!result.success) {
-            return res.status(404).json(result);
+            throw new CustomError('API key not found', 404);
         }
-        
+
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(err instanceof CustomError ? err : new CustomError('Failed to get API key', 500, err));
     }
 });
 
-//Update API Key
-router.put('/:apiId', async (req, res) => {
+// Update API key
+router.put('/:apiId', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
         const updates = req.body;
-        
-        // Validate updates object contains allowed fields
+
         const allowedUpdates = ['expiresAt', 'isActive', 'attempts'];
         const isValidUpdate = Object.keys(updates).every(key => allowedUpdates.includes(key));
-        
+
         if (!isValidUpdate) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Invalid updates! Only expiresAt, isActive, and attempts can be updated.' 
-            });
+            throw new CustomError('Invalid updates! Only expiresAt, isActive, and attempts can be updated.', 400);
         }
-        
+
         const result = await apiKeyService.updateApiKey(apiId, updates);
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to update API key', 500, err));
     }
 });
 
-//Revoke API key
-router.patch('/:apiId/revoke', async (req, res) => {
+// Revoke API key
+router.patch('/:apiId/revoke', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
         const result = await apiKeyService.revokeApiKey(apiId);
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to revoke API key', 500, err));
     }
 });
 
-//Reset API Key attempts
-router.patch('/:apiId/reset-attempts', async (req, res) => {
+// Reset API key attempts
+router.patch('/:apiId/reset-attempts', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
         const result = await apiKeyService.resetAttempts(apiId);
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to reset attempts', 500, err));
     }
 });
 
-//Delete API key
-router.delete('/:apiId', async (req, res) => {
+// Delete API key
+router.delete('/:apiId', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
         const result = await apiKeyService.deleteApiKey(apiId);
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    } catch (err) {
+        next(new CustomError('Failed to delete API key', 500, err));
     }
 });
 
