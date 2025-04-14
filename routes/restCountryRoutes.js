@@ -9,12 +9,29 @@ router.get('/:name', apiKeyMiddleware, async (req, res) => {
     try {
         const { name } = req.params;
         const result = await countryService.getCountryByName(name);
-        console.log('Authenticated with API key:', req.apiKey.apiId);
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(404).json(result);
+        
+        if (!result.success) {
+            return res.status(404).json(result);
         }
+
+        // Transform the data to include only requested fields
+        const filteredData = result.data.map(country => ({
+            name: {
+                common: country.name.common,
+                official: country.name.official
+            },
+            capital: country.capital,
+            languages: country.languages,
+            flag: country.flag,
+            flags: country.flags // Include both emoji flag and image URLs
+        }));
+
+        res.status(200).json({
+            success: true,
+            data: filteredData,
+            message: 'Country data retrieved successfully'
+        });
+
     } catch (error) {
         console.error('Route error:', error);
         res.status(500).json({
@@ -25,27 +42,6 @@ router.get('/:name', apiKeyMiddleware, async (req, res) => {
     }
 });
 
-// GET country currency by name
-// router.get('/:name/currency', async (req, res) => {
-//     try {
-//         const { name } = req.params;
-//         const result = await countryService.getCountryCurrency(name);
-        
-//         if (result.success) {
-//             res.status(200).json(result);
-//         } else {
-//             res.status(404).json(result);
-//         }
-//     } catch (error) {
-//         console.error('Route error:', error);
-//         res.status(500).json({
-//             success: false,
-//             error: 'Internal server error',
-//             message: 'An unexpected error occurred'
-//         });
-//     }
-// });
 
-// You can add more routes here as needed
 
 module.exports = router;

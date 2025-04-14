@@ -5,9 +5,6 @@ const ApiKeyService = require('../services/apiKeyServices');
 
 const apiKeyService = new ApiKeyService();
 
-// Middleware to ensure user is authenticated
-// router.use(authMiddleware);
-
 // Generate new API key
 router.post('/', async (req, res) => {
     try {
@@ -26,19 +23,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// router.get('/header', async (req, res) => {
-//     try{
-//         const key = req.header('Authorization');
-//         console.log(key);
-//         res.status(200).json(key);
-
-//     }catch(error){
-//         res.status(500).json('Not Found');
-
-//     }
-// });
-
-// Get all API keys for current user
+//GET all API key
 router.get('/', async (req, res) => {
     try {
         const {userId} = req.query;
