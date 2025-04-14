@@ -1,14 +1,14 @@
 const express = require('express');
-const authRoutes = require('./routes/authRoutes');
-const apiKeyRoutes = require('./routes/apiKeyRoutes');
-const countryRoutes = require('./routes/restCountryRoutes');
-const db = require('./config/db');
-const cors = require('cors'); // Add this line
+const authRoutes = require('./src/routes/authRoutes');
+const apiKeyRoutes = require('./src/routes/apiKeyRoutes');
+const countryRoutes = require('./src/routes/restCountryRoutes');
+const db = require('./src/config/db');
+const cors = require('cors'); 
 
 const app = express();
-// Enable CORS for all routes
+
 app.use(cors({
-  origin: 'http://localhost:3001', // Your frontend URL
+  origin: 'http://localhost:3001',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
