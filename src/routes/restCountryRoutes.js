@@ -4,7 +4,7 @@ const countryService = require('../services/restCountryServices');
 const apiKeyMiddleware = require('../middleware/authMiddleware');
 const CustomError = require('../utils/customError');
 
-// GET country by name
+//GET country by name
 router.get('/:name', apiKeyMiddleware, async (req, res, next) => {
     try {
         const { name } = req.params;

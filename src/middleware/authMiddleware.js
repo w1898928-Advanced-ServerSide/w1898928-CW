@@ -31,8 +31,7 @@ const apiKeyMiddleware = async (req, res, next) => {
             return res.status(403).json(createResponse(false, null, 'API key has expired'));
         }
 
-        // Implement basic rate limiting (optional)
-        // You might want to move this to a separate rate limiting middleware
+        // Implement basic rate limiting
         const MAX_ATTEMPTS = 100;
         if (apiKeyData.attempts >= MAX_ATTEMPTS) {
             return res.status(429).json(createResponse(false, null, 'Too many requests'));

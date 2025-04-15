@@ -7,7 +7,7 @@ const CustomError = require('../utils/customError');
 
 const userService = new UserService();
 
-// Register user
+//Register user
 router.post('/register', async (req, res, next) => {
     try {
         const { username, password, email } = req.body;
@@ -18,7 +18,7 @@ router.post('/register', async (req, res, next) => {
     }
 });
 
-// Login user
+//Login user
 router.post('/login', async (req, res, next) => {
     try {
         const { username, password } = req.body;
@@ -34,7 +34,7 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-// Get current session user
+//Get current session user
 router.get('/me', (req, res) => {
     if (req.session && req.session.isAuthenticated && req.session.user) {
         res.status(200).json({ user: req.session.user });
@@ -43,7 +43,7 @@ router.get('/me', (req, res) => {
     }
 });
 
-// Logout
+//Logout
 router.post('/logout', (req, res, next) => {
     req.session.destroy((err) => {
         if (err) return next(new CustomError('Failed to log out', 500, err));
@@ -52,18 +52,7 @@ router.post('/logout', (req, res, next) => {
     });
 });
 
-// Create user (admin use)
-router.post('/create', async (req, res, next) => {
-    try {
-        const { username, password, email } = req.body;
-        await userService.createUser(username, password, email);
-        res.status(201).json({ message: 'User created successfully' });
-    } catch (err) {
-        next(new CustomError('Failed to create user', 500, err));
-    }
-});
-
-// Get all users
+//Get all users
 router.get('/users', checkSession, async (req, res, next) => {
     try {
         const result = await userService.getAllUsers();
@@ -73,7 +62,7 @@ router.get('/users', checkSession, async (req, res, next) => {
     }
 });
 
-// Get user by ID
+//Get user by ID
 router.get('/users/:id', checkSession, async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -84,7 +73,7 @@ router.get('/users/:id', checkSession, async (req, res, next) => {
     }
 });
 
-// Update user
+//Update user
 router.put('/users/:id', checkSession, async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -97,7 +86,7 @@ router.put('/users/:id', checkSession, async (req, res, next) => {
     }
 });
 
-// Delete user
+//Delete user
 router.delete('/users/:id', checkSession, async (req, res, next) => {
     try {
         const { id } = req.params;

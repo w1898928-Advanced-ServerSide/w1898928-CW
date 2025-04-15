@@ -1,4 +1,3 @@
-// clients/restCountryClient.js
 const axios = require('axios');
 const URL = 'https://restcountries.com/v3.1/name/';
 
@@ -6,7 +5,7 @@ class RestCountryClientClass {
     constructor() {
         this.baseUrl = URL;
         this.axios = axios.create({
-            timeout: 5000 // 5 seconds timeout
+            timeout: 5000
         });
     }
 

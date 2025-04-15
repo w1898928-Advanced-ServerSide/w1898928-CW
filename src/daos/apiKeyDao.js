@@ -4,6 +4,7 @@ const { createResponse } = require('../utils/responseUtil');
 class ApiKeyDAO {
     constructor() {}
 
+    //Creates a new API key in the database
     async createApiKey(apiKey, userId, expiresAt) {
         return new Promise((resolve, reject) => {
             const sql = `INSERT INTO api_keys (apiKey, userId, expiresAt) 
@@ -24,13 +25,13 @@ class ApiKeyDAO {
         });
     }
 
+    //Retrieves an API key by its database ID
     async getApiKeyById(apiId) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM api_keys WHERE apiId = ?`;
             db.get(sql, [apiId], (err, row) => {
                 if (err) return reject(err);
                 if (!row) {
-                // If no API key found, return a message
                 resolve(createResponse(false, null, 'API key not found'));
             } else {
                 resolve(createResponse(true, row));
@@ -39,6 +40,7 @@ class ApiKeyDAO {
         });
     }
 
+    //Retrieves an API key by its key value
     async getApiKeyByKey(apiKey) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM api_keys WHERE apiKey = ?`;
@@ -49,6 +51,7 @@ class ApiKeyDAO {
         });
     }
 
+    //Retrieves all API keys for a specific user
     async getApiKeysByUser(userId) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM api_keys WHERE userId = ?`;
@@ -59,6 +62,7 @@ class ApiKeyDAO {
         });
     }
 
+    //Retrieves all API keys in the database
     async updateApiKey(apiId, updates) {
         return new Promise((resolve, reject) => {
             const { expiresAt, isActive, attempts } = updates;
@@ -83,6 +87,7 @@ class ApiKeyDAO {
         });
     }
 
+    //Updates the API key in the database
     async incrementAttempts(apiId) {
         return new Promise((resolve, reject) => {
             const sql = `UPDATE api_keys 
@@ -96,6 +101,7 @@ class ApiKeyDAO {
         });
     }
 
+    //Deletes the API key from the database
     async deleteApiKey(apiId) {
         return new Promise((resolve, reject) => {
             const sql = `DELETE FROM api_keys WHERE apiId = ?`;
@@ -106,10 +112,12 @@ class ApiKeyDAO {
         });
     }
 
+    //Revokes the API key by setting it to inactive
     async revokeApiKey(apiId) {
         return this.updateApiKey(apiId, { isActive: false });
     }
 
+    //Resets the attempts count for the API key
     async resetAttempts(apiId) {
         return this.updateApiKey(apiId, { attempts: 0 });
     }

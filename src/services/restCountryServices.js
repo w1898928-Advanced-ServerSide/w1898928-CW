@@ -1,4 +1,3 @@
-// services/countryService.js
 const RestCountryClient = require('../Client/restCountry');
 
 class CountryService {
@@ -10,7 +9,6 @@ class CountryService {
         try {
             const countryData = await this.restCountryClient.getCountryByName(name);
             
-            // You can add data transformation here if needed
             return {
                 success: true,
                 data: countryData,
@@ -26,13 +24,11 @@ class CountryService {
         }
     }
 
-    // You can add more service methods here as needed
-    // For example:
     async getCountryCurrency(name) {
         try {
             const countryData = await this.getCountryByName(name);
             if (!countryData.success) {
-                return countryData; // Forward the error
+                return countryData; 
             }
 
             const currencies = countryData.data[0]?.currencies;

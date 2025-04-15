@@ -6,7 +6,7 @@ const CustomError = require('../utils/customError');
 
 const apiKeyService = new ApiKeyService();
 
-// Generate new API key
+//Generate new API key
 router.post('/', checkSession, async (req, res, next) => {
     try {
         const { userId, expiresInDays } = req.body;
@@ -17,7 +17,7 @@ router.post('/', checkSession, async (req, res, next) => {
     }
 });
 
-// Get all API keys for a user
+//Get all API keys for a user
 router.get('/', checkSession, async (req, res, next) => {
     try {
         const { userId } = req.query;
@@ -28,7 +28,7 @@ router.get('/', checkSession, async (req, res, next) => {
     }
 });
 
-// Get specific API key by ID
+//Get specific API key by ID
 router.get('/:apiId', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
@@ -44,7 +44,7 @@ router.get('/:apiId', checkSession, async (req, res, next) => {
     }
 });
 
-// Update API key
+//Update API key
 router.put('/:apiId', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
@@ -64,7 +64,7 @@ router.put('/:apiId', checkSession, async (req, res, next) => {
     }
 });
 
-// Revoke API key
+//Revoke API key
 router.patch('/:apiId/revoke', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
@@ -75,7 +75,7 @@ router.patch('/:apiId/revoke', checkSession, async (req, res, next) => {
     }
 });
 
-// Reset API key attempts
+//Reset API key attempts
 router.patch('/:apiId/reset-attempts', checkSession, async (req, res, next) => {
     try {
         const { apiId } = req.params;
