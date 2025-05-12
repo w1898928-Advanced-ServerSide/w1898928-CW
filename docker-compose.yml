@@ -3,10 +3,10 @@ services:
     image: ramindulakshan/restcountry-backend
     container_name: rest-country-be
     ports:
-      - "4000:4000"
+      - "5001:5000"
 
   restcountry-ui:
     image: ramindulakshan/restcountry-frontend
     container_name: restcountry-ui
     ports:
-      - "3001:3000"
+      - "3005:3001"

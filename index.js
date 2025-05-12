@@ -13,10 +13,10 @@ const swaggerDocument = require('./swagger-output.json');
 const app = express();
 // Enable CORS for all routes
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3001','http://localhost:3002'],
   credentials: true
 }));
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 app.use(session({
   secret: "asdfghjkl0987654321",
   resave: false,
