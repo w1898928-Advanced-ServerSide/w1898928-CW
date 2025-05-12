@@ -23,7 +23,8 @@ router.get('/:name', apiKeyMiddleware, async (req, res, next) => {
             capital: country.capital,
             languages: country.languages,
             flag: country.flag,
-            flags: country.flags // emoji and image URL
+            flags: country.flags,
+            currencies: country.currencies
         }));
 
         res.status(200).json({
