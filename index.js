@@ -13,7 +13,7 @@ const swaggerDocument = require('./swagger-output.json');
 const app = express();
 // Enable CORS for all routes
 app.use(cors({
-  origin: ['http://localhost:3001','http://localhost:3002'],
+  origin: ['http://localhost:3030','http://localhost:3005'],
   credentials: true
 }));
 const PORT = process.env.PORT || 5000;
